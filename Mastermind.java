@@ -68,9 +68,7 @@ public class Mastermind {
                     rounds = Integer.parseInt(args[1]);
                 } catch (Exception e) {
                     System.out.println(RED+"\tYou should type number rounds! \n"+RESET);
-                } finally {
-                    rounds = 10;
-                }
+                };
                
                 secretCode = getSecretCode();
             }

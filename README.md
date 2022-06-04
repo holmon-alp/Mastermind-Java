@@ -27,7 +27,6 @@ Your program will also receive the following parameters:
 -t [ATTEMPTS]: specifies the number of attempts; by default, the player has 10 attempts.
 
 ## Installation
-TODO - How to install your project? npm install? make? make re?
 
 javac Mastermind.Java
 

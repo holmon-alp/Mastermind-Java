@@ -39,3 +39,7 @@ TODO - How does it work?
   3: java Mastermind -c [secret code]
 
 ```
+
+
+![image](https://user-images.githubusercontent.com/96412090/172015599-d6ec625d-66c3-4251-bd06-59bd72e17873.png)
+

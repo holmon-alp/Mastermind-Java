@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class Mastermind {
 
     public static  final String RESET = "\u001B[0m";
-    public static  final String BLACK = "\u001B[30m";
     public static  final String RED = "\u001B[31m";
     public static  final String GREEN = "\u001B[32m";
     public static  final String YELLOW = "\u001B[33m";
@@ -42,16 +41,30 @@ public class Mastermind {
         System.out.printf(GREEN + " Well placed pieces: %d\n" + RESET, wp);
     }
 
-    static boolean wrongInput(String text) { // check wrong  input 
+
+    static boolean isDuplicated(char arg[]) { // checking char dublicated in array;
+        int count = 0;
+        for(int i = 0; i <arg.length; i++) {
+            for(int j = i+1; j <arg.length; j++) {  
+                if(arg[i] == arg[j]) {  
+                    count++;
+                    // arg[j] = '0';  //Set arr[j] to 0 to avoid printing visited character  
+                }
+            }  
+        }
+        return count > 0;
+    }
+    static boolean wrongInput(String text) { // checking wrong  input 
         int len = text.length();
         String block = "01234567";
         if(len != 4) 
                 return true;
-        for(int i=0; i < len; i++) {
-	    char c = text.charAt(i);	
-            if(!(block.contains(""+c))) {
+        char arr[] = text.toCharArray();  
+        for(int i=0; i < arr.length; i++) {
+	    char c = arr[i];	
+            if(!(block.contains(""+c)) || isDuplicated(arr)) {
                 return true;
-	    }
+	        }
         }
 	return false;
     }
@@ -59,21 +72,33 @@ public class Mastermind {
 // Start  game
     public static void main(String[] args) {
         
-        int rounds = 1, round = 1;
-        String secretCode = "";
-        String inputCode = "";
+        int rounds = 10, round = 1;
+        String secretCode = new String();
+        String inputCode = new String();
         if (args.length == 2){
             if(args[0].equals("-t")){
                 try {
                     rounds = Integer.parseInt(args[1]);
+                    if(rounds < 0 || 30 < rounds) {
+                         rounds *= -1;
+                         System.out.printf("Rounds number set: %d(cannot be negative)\n\n", rounds);
+                    } else if(rounds > 30){
+                        System.out.println("Rounds cannot more then 30");
+                        rounds = 10;
+                    }
                 } catch (Exception e) {
-                    System.out.println(RED+"\tYou should type number rounds! \n"+RESET);
+                    System.out.println(RED+"\tYou should type number of rounds! \n"+RESET);
                 };
-               
                 secretCode = getSecretCode();
+
             }
             if(args[0].equals("-c")) {
                 secretCode = args[1];
+                if(wrongInput(secretCode)) {
+                    System.out.printf(RED+"\tError in setting secret code: '%s'\n" +
+                        "\t\tSecret code set automatic by 'generator'\n", secretCode);
+                    secretCode = getSecretCode();
+                }
                 rounds = 10;
             }
         } else {
@@ -83,7 +108,7 @@ public class Mastermind {
 
         System.out.println(BLUE + "Will you find the secret code?");
         Scanner input = new Scanner(System.in);
-        while(round <= rounds) {
+        while (round <= rounds) {
             System.out.printf(PURPLE + " -----\n Round %d\n > ", round);
             inputCode = input.nextLine();
             if(wrongInput(inputCode)) {
@@ -99,7 +124,6 @@ public class Mastermind {
             round++;
         }
         if (round == rounds)
-            System.out.printf(CYAN + "  Game Over !\n Secret code: %s\n", secretCode);
-        
+            System.out.printf(CYAN + "  Game Over !\n Secret code: %s\n", secretCode); 
     }
 }

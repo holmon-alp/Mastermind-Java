@@ -3,7 +3,7 @@
 
 ## Task
 
-<marquee><mark>TODO - My Java Mastermind</mark></marquee>
+<marquee>TODO - My Java Mastermind</marquee>
 
 ## Description
 

@@ -1,5 +1,8 @@
 import java.lang.Math;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 
 public class Mastermind {
@@ -72,40 +75,51 @@ public class Mastermind {
 // Start  game
     public static void main(String[] args) {
         
-        int rounds = 10, round = 1;
+        int rounds = 0, round = 1;
         String secretCode = new String();
         String inputCode = new String();
-        if (args.length == 2){
-            if(args[0].equals("-t")){
-                try {
-                    rounds = Integer.parseInt(args[1]);
-                    if(rounds < 0 || 30 < rounds) {
-                         rounds *= -1;
-                         System.out.printf("Rounds number set: %d(cannot be negative)\n\n", rounds);
-                    } else if(rounds > 30){
-                        System.out.println("Rounds cannot more then 30");
-                        rounds = 10;
-                    }
-                } catch (Exception e) {
-                    System.out.println(RED+"\tYou should type number of rounds! \n"+RESET);
-                };
-                secretCode = getSecretCode();
 
-            }
-            if(args[0].equals("-c")) {
-                secretCode = args[1];
-                if(wrongInput(secretCode)) {
-                    System.out.printf(RED+"\tError in setting secret code: '%s'\n" +
-                        "\t\tSecret code set automatic by 'generator'\n", secretCode);
-                    secretCode = getSecretCode();
+        if (args.length > 1 ){
+
+            ArrayList<String> option_list = new ArrayList<String>();
+            option_list.addAll(Arrays.asList(args));
+            Iterator<String> itr = null;
+            itr = option_list.listIterator();    
+            while (itr.hasNext()) {      // rotation across values;
+                String option = itr.next();
+                if (option.equals("-t")) {
+                    try {                // checking  number of rounds is valid ?
+                        rounds = Integer.parseInt(itr.next());
+                        if(rounds < 0 || 30 < rounds) {
+                            rounds *= -1;
+                            System.out.printf("Rounds number set: %d(cannot be negative)\n\n", rounds);
+                        } else if(rounds > 30){
+                                System.out.println("Rounds cannot be more then 30");
+                                rounds = 10;
+                        }
+                    } catch (Exception e) {
+                        System.out.println(RED+"\tYou should type number of rounds! (-t)\n"+RESET);
+                    };
                 }
-                rounds = 10;
+                
+                if (option.equals("-c")) {
+                    String code = itr.next();
+                    if(wrongInput(code)) {
+                        System.out.printf(RED+"\tError in setting secret code: '%s'\n" +
+                            "\t\tSecret code set automatic by 'generator' (-c)\n", secretCode);
+                        secretCode = getSecretCode();
+                    } else {
+                        secretCode = code;
+                    }
+                }
             }
-        } else {
+        }
+        if (secretCode.isEmpty()) {     // if secret code is empty set generator
             secretCode = getSecretCode();
+        }
+        if (rounds == 0) {              // if rounds is 0 set default 10
             rounds = 10;
         }
-
         System.out.println(BLUE + "Will you find the secret code?");
         Scanner input = new Scanner(System.in);
         while (round <= rounds) {
